@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score # type: ignore
 st.set_page_config(page_title="Diabetes Prediction", layout="wide", page_icon="🧑‍⚕")
 
 # Load the saved diabetes model
-diabetes_model_path = r"C:\Users\bhara\OneDrive\Desktop\disease\diabetes_model.sav"
+diabetes_model_path = r"C:\Users\Bheem\OneDrive\Desktop\predictor\diabetes-prediction-model.sav"
 diabetes_model = pkl.load(open(diabetes_model_path, "rb"))
 
 # Page title
@@ -76,7 +76,7 @@ st.write(diab_diagnosis)
 
 if st.button("show model accuracy"):
     
-    test_data =  pd.read_csv(r"C:\Users\bhara\OneDrive\Desktop\disease\diabetes.csv")
+    test_data =  pd.read_csv(r"C:\Users\Bheem\OneDrive\Desktop\predictor\diabetes.csv")
 
     X = test_data.drop("Outcome", axis=1)
     y = test_data["Outcome"]
