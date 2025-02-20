@@ -2,22 +2,13 @@ import os
 import pandas as pd
 import pickle as pkl
 import streamlit as st
-from sklearn.metrics import accuracy_score  # type: ignore
-
+from sklearn.metrics import accuracy_score # type: ignore
 # Set page configuration
 st.set_page_config(page_title="Diabetes Prediction", layout="wide", page_icon="🧑‍⚕")
 
-# Define model path
-diabetes_model_path = "C:/Users/Bheem/OneDrive/Desktop/predictor/diabetes-prediction-model.sav"
-
-# Check if the model file exists before loading
-if os.path.exists(diabetes_model_path):
-    with open(diabetes_model_path, "rb") as file:
-        diabetes_model = pkl.load(file)
-    st.success("✅ Model loaded successfully.")
-else:
-    st.error("❌ Model file NOT found! Check the file path.")
-    st.stop()  # Stop execution if model is missing
+# Load the saved diabetes model
+diabetes_model_path = r"C:\Users\bhara\OneDrive\Desktop\disease\diabetes_model.sav"
+diabetes_model = pkl.load(open(diabetes_model_path, "rb"))
 
 # Page title
 st.title("Diabetes Prediction using Machine Learning")
@@ -55,7 +46,7 @@ diab_diagnosis = ""
 # Creating a button to predict the output
 if st.button("Diabetes Test Result"):
     try:
-        # Convert user input to float
+        # Convert the user input into float
         user_input = [
             float(pregnancies),
             float(glucose),
@@ -71,9 +62,10 @@ if st.button("Diabetes Test Result"):
         diab_prediction = diabetes_model.predict([user_input])
 
         # Display the result
-        diab_diagnosis = (
-            "The person has Diabetes 🩸" if diab_prediction[0] == 1 else "The person does not have Diabetes ✅"
-        )
+        if diab_prediction[0] == 1:
+            diab_diagnosis = "The person has Diabetes 🩸"
+        else:
+            diab_diagnosis = "The person does not have Diabetes ✅"
 
     except ValueError:
         diab_diagnosis = "⚠ Please enter valid numeric values."
@@ -82,19 +74,15 @@ if st.button("Diabetes Test Result"):
 st.subheader("Prediction Result:")
 st.write(diab_diagnosis)
 
-# Show model accuracy
-if st.button("Show Model Accuracy"):
-    test_data_path = "C:/Users/Bheem/OneDrive/Desktop/predictor/diabetes.csv"
+if st.button("show model accuracy"):
+    
+    test_data =  pd.read_csv(r"C:\Users\bhara\OneDrive\Desktop\disease\diabetes.csv")
 
-    if os.path.exists(test_data_path):
-        test_data = pd.read_csv(test_data_path)
-        
-        X = test_data.drop("Outcome", axis=1)
-        y = test_data["Outcome"]
+    X = test_data.drop("Outcome", axis=1)
+    y = test_data["Outcome"]
 
-        y_pred = diabetes_model.predict(X)
+    y_pred = diabetes_model.predict(X)
 
-        accuracy = accuracy_score(y, y_pred)
-        st.write(f"Model Accuracy: {accuracy*100:.2f}%")
-    else:
-        st.error("❌ Test data file NOT found! Check the file path.")
+    accuracy = accuracy_score(y, y_pred)
+    
+    st.write(f"Model Accuracy: {accuracy*100:.2f}%")
